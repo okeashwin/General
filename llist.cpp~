@@ -1,0 +1,134 @@
+#include<iostream>
+#include<stdlib.h>
+#include "llist.h"
+
+using namespace std;
+
+int Node::getData()
+{	return this->data;
+}
+
+Node *Node::getNext()
+{	return this->next;
+}
+
+void Node::setData(int value)
+{
+	this->data=value;
+}
+
+void Node::setNext(Node *nxtNode)
+{
+	this->next=nxtNode;
+}
+
+LinkedList::LinkedList()
+{	
+	this->head=NULL;
+}
+
+//Returns 0 on successful insertion
+//Returns 1 if it is a duplicate
+int LinkedList::insertIntoLL(int value)
+{
+	//Dups not allowed
+	Node *temp=this->head;
+	Node *new_el=new Node();
+	new_el->setData(value);
+	new_el->setNext(NULL);
+	if(temp==NULL)	//1st element
+		this->head=new_el;
+	else		//Not the 1st
+	{
+		Node *prev=this->head;
+		Node *curr=this->head;
+		int isNull=0;
+		int isDup=0;
+		while(curr->getData()<=value)
+		{
+			//Check for the dup first
+			if(curr->getData()==value)
+			{
+				isDup=1;
+				break;
+			}
+			//Increment pointers
+			prev=curr;
+			curr=curr->getNext();
+			if(curr==NULL)
+                        {
+                                isNull=1;
+                                break;
+                        }
+		}
+		if(isDup)
+		{
+			cout << "The element is a duplicate"<<endl;
+			return 1;
+		}
+		if(isNull)	//curr is NULL, prev is the last element
+			prev->setNext(new_el);
+		else
+		{
+			prev->getNext()=new_el;	
+			new_el->getNext()=curr;
+		}
+	}
+
+	cout<<"Successfully inserted "<<value<<" into the LL"<<endl;
+	return 0;
+
+} 
+
+//Returns 0 if element is successfully deleted
+//Returns 1 if the element is not found
+int LinkedList::removeFromLL(int value)
+{
+	Node *temp=this->head;
+	if(temp==NULL)
+	{
+		cout << "LL is empty"<<endl;
+		return 1;
+	}
+	else
+	{
+		Node *curr=this->head;
+		Node *prev=this->head;
+		int isNull=0;
+		while(curr->getData()!=value)
+		{
+			prev=curr;
+			curr=curr->getNext();
+			if(curr==NULL)
+			{
+				isNull=1;
+				break;
+			}
+		}
+		if(isNull)	//curr is NULL
+		{
+			cout << "Element not found"<<endl;
+			return 1;
+		}
+		else		//gotta the element
+			prev->getNext()=curr->getNext();
+		cout << "Element "<<value<<" successfully deleted"<<endl;
+		return 0;
+	}
+}
+
+void LinkedList::displayLL()
+{
+	Node *temp=this->head;
+	if(temp==NULL)
+		cout<<"LL is empty"<<endl;
+	else
+	{
+		while(temp!=NULL)
+		{
+			cout << temp->getData()<<" --> ";
+			temp=temp->getNext();
+		}
+		cout << "NULL"<<endl;
+	}
+}
