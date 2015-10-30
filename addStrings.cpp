@@ -2,6 +2,7 @@
 #include <string>
 #include <cstdlib>
 #include <set>
+#include <vector>
 using namespace std;
 
 // Represents two numbers as strings, adds them up and returns the result as a string
@@ -183,6 +184,108 @@ string toUpper(string s1)
 	return retValue;
 }
 
+// Remove a character's occurence in a string
+string removeOccurences(string s1, char c)
+{
+	string retValue;
+	string::iterator it = s1.begin();
+	string::iterator return_iter = retValue.begin();
+	int iter = 0;
+	for(;it!=s1.end();it++)
+	{
+		if(*it != c) 	// Insert into retValue
+		{
+			retValue.insert(iter, 1, *it);
+			iter++;
+		}
+	}
+
+	return retValue;
+}
+
+// strtok
+vector<string> my_strtok(string s1, char delimiter)
+{
+	bool debug = true;
+	vector<string> tokens;
+	// string::iterator iter = s1.begin();
+	int currTokenStartIndex = 0;
+	int iter = 0;
+	for(;iter < s1.size() ; iter++)
+	{
+		if(s1[iter] == delimiter)
+		{
+			string newToken (s1, currTokenStartIndex, iter - currTokenStartIndex);
+			if(debug) cout << "Pushing this new token " << newToken << endl;
+			tokens.push_back(newToken);
+			currTokenStartIndex = iter + 1;
+		}	
+	}
+
+	//Take care of the last token
+	if(currTokenStartIndex != s1.size()-1)
+	{
+		string newToken (s1, currTokenStartIndex, s1.size() - currTokenStartIndex);
+		if(debug) cout << "Pushing this last token " << newToken << endl;
+		tokens.push_back(newToken);
+
+	}
+
+	return tokens;
+}
+
+string reverseWords(string input)
+{
+	vector<string> tokens = my_strtok(input, ' ');
+	vector<string>::iterator iter = tokens.end() - 1;
+	string result;
+	while(1)
+	{
+		result.append(*iter);
+		if(iter != tokens.begin())
+		{
+			result.append(" ");
+		}
+		else
+		{
+			break;
+		}
+
+		iter--;
+	}
+
+	return result;
+}
+
+// Convert 1000000 to 1,000,000 - In place
+string convertNumberFormat(string input)
+{
+	string result(input);
+	int index = input.size() - 1;
+	int currRun = 1;
+	while(1)
+	{
+		if(currRun == 3)
+		{
+			result.insert(index, 1, ',');
+			index--;
+			currRun = 1;
+		}
+		else
+		{
+			index--;
+			currRun++;
+		}
+
+		if(index==0)
+		{
+			break;
+		}
+	}
+
+	return result;
+}
+
 int main()
 {
 	// string s1, s2;
@@ -203,9 +306,25 @@ int main()
 	// cin >> testToLower;
 	// cout << "toLower() : " << toLower(testToLower) << endl;
 
-	 string testToUpper;
-	 cin >> testToUpper;
-	 cout << "toUpper() : " << toUpper(testToUpper) << endl;
+	 // string testToUpper;
+	 // cin >> testToUpper;
+	 // cout << "toUpper() : " << toUpper(testToUpper) << endl;
 
+	// string test;
+	// char c;
+	// cin >> test >> c;
+	// cout << removeOccurences(test, c) << endl;
+
+	string testTok = "This is NC State University";
+	// vector<string> tokens = my_strtok(testTok, ' ');
+	// vector<string>::iterator iter = tokens.begin();
+	// cout << "Tokens found " << endl;
+	// for(; iter!= tokens.end(); iter++)
+	// {
+	// 	cout << "=============" << *iter << endl;
+	// }
+
+	// cout << reverseWords(testTok) << endl;
+	cout << convertNumberFormat("996") << endl;
 	return 0;
 }
