@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <cstring>
 #include <set>
 #include <vector>
+#include <cmath>
 using namespace std;
 
 // Represents two numbers as strings, adds them up and returns the result as a string
@@ -286,6 +288,59 @@ string convertNumberFormat(string input)
 	return result;
 }
 
+// Remove whitespaces from a string
+void removeWhitespaces(string& input)
+{
+	string::iterator iter = input.begin();
+	string::iterator unique_iter = input.begin();
+	int shrink_to_size = 0;
+	for(;iter!= input.end();iter++)
+	{
+		if(*iter != ' ')
+		{
+			*unique_iter = *iter;
+			unique_iter++;
+			shrink_to_size++;
+		}
+	}
+
+	input.resize(shrink_to_size);
+}
+
+string my_itoa(int number)
+{
+	string result;
+	if(number < 0)
+	{
+		result.append(1, '-');
+		number = -1*number;
+	}
+
+	int temp = number;
+	int digits = 0;
+	while(temp > 0)
+	{
+		digits++;
+		temp = temp/10;
+	}
+
+	int msb = digits - 1;
+	int currMsbValue = 0;
+	temp = number;
+	int divisor = 0;
+	while(temp > 0)
+	{
+		divisor = pow(10, msb);
+		currMsbValue = temp / divisor;
+		char appendChar = (char) currMsbValue + 48;
+		result.append(1, appendChar);
+		temp = temp % divisor;
+		msb = msb - 1;
+	}
+
+	return result;
+}
+
 int main()
 {
 	// string s1, s2;
@@ -325,6 +380,12 @@ int main()
 	// }
 
 	// cout << reverseWords(testTok) << endl;
-	cout << convertNumberFormat("996") << endl;
+	// cout << convertNumberFormat("996") << endl;
+	// string test_string = "       Ashwin1       ";
+	// removeWhitespaces(test_string);
+	// cout << test_string << endl;
+
+	cout << my_itoa(2234) << endl;
+	cout << my_itoa(-998) << endl;
 	return 0;
 }

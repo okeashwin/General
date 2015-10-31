@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stack>
+#include <queue>
 
 using namespace std;
 
@@ -112,6 +113,108 @@ void preorder_iterative(BSTNode *root)
 	// Done
 	cout << endl;
 }
+
+void postorder(BSTNode *root)
+{
+	if(root==NULL)
+		return;
+	postorder(root->left);
+	postorder(root->right);
+	cout << root->value << " , ";
+}
+
+
+void postorder_iterative(BSTNode *root)
+{
+	if(root==NULL)
+		return;
+
+	stack<BSTNode *> aux1;
+	stack<BSTNode *> aux2;
+	BSTNode *curr = root;
+	aux1.push(curr);
+	while(!aux1.empty())
+	{
+		curr = aux1.top();
+		aux1.pop();
+		if(curr->left)
+			aux1.push(curr->left);
+		if(curr->right)
+			aux1.push(curr->right);
+
+		// Instead of printing, push it to aux2
+		aux2.push(curr);
+	}
+
+	// Print out aux2
+	while(!aux2.empty())
+	{
+		curr = aux2.top();
+		cout << curr->value << " , ";
+		aux2.pop();
+	}	
+
+	// Done
+	cout << endl;
+
+}
+
+void printLevel(int level, BSTNode *root)
+{
+	if(root==NULL)
+		return;
+	if(level==0)
+		cout << root->value << " , ";
+	else
+	{
+		printLevel(level-1, root->left);
+		printLevel(level-1, root->right);
+	}
+}
+
+int depthBST(BSTNode *root)
+{
+	if(root==NULL)
+		return 0;
+	return max(depthBST(root->left), depthBST(root->right)) + 1;
+}
+
+void level_order_recursive(BSTNode *root)
+{
+	if(root==NULL)
+	{
+		return;
+	}
+
+	int depth = depthBST(root);
+	for(int i=0;i<depth;i++)
+	{
+		printLevel(i, root);
+	}
+}
+
+void level_order_iterative(BSTNode *root)
+{
+	if(root==NULL)
+		return;
+	queue<BSTNode *> nodes;
+	BSTNode *curr = root;
+	nodes.push(curr);
+	while(!nodes.empty())
+	{
+		curr = nodes.front();
+		nodes.pop();
+		cout << curr->value << " , ";
+		if(curr->left)
+			nodes.push(curr->left);
+		if(curr->right)
+			nodes.push(curr->right);
+	}
+	// Done
+	cout << endl;
+}
+
+
 int main()
 {
 	int arr[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -127,4 +230,14 @@ int main()
 	preorder(root);
 	cout << endl;
 	preorder_iterative(root);
+
+	cout << "================PostOrder==============" << endl;
+	postorder(root);
+	cout << endl;
+	postorder_iterative(root);
+
+	cout << "================Level Order==============" << endl;
+	level_order_recursive(root);
+	cout << endl;
+	level_order_iterative(root);
 }
