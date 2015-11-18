@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stack>
 #include <queue>
+#include <climits>
 
 using namespace std;
 
@@ -214,6 +215,104 @@ void level_order_iterative(BSTNode *root)
 	cout << endl;
 }
 
+void ksmallest(BSTNode *root, int k, int *karr)
+{
+	static int index = 0;
+	if(root==NULL)
+		return;
+
+	ksmallest(root->left, k, karr);
+	if(index < k)
+	{
+		karr[index] = root->value;
+		index++;
+	}
+
+	ksmallest(root->right, k, karr);
+}
+
+void printArray(int *karr, int k)
+{
+	cout << endl;
+	for(int i=0;i<k;i++)
+		cout << karr[i] << " , ";
+	cout << endl;
+}
+
+// Prints a specific level
+// 1 for root
+void printLevel(BSTNode *root, int level)
+{
+	int height = depthBST(root);
+	if(level > height || level <= 0)
+	{
+		cout << "Invalid level " << endl;
+		return;
+	}
+
+	if(root==NULL)
+		return;
+	if(level==1)
+		cout << root->value << " ";
+	else
+	{
+		printLevel(root->left, level - 1);
+		printLevel(root->right, level - 1);
+	}
+}
+
+int min(BSTNode *root)
+{
+	if(root==NULL)
+		return -1;
+	BSTNode *temp = root;
+	while(temp->left)
+		temp = temp->left;
+	return temp->value;
+}
+
+int max(BSTNode *root)
+{
+	if(root==NULL)
+		return -1;
+	BSTNode *temp = root;
+	while(temp->right)
+		temp = temp->right;
+	return temp->value;	
+}
+
+// If a tree is a BST
+bool isBST(BSTNode *root)
+{
+	if(root==NULL)
+		return true;
+	if(root->left && max(root->left) > root->value)
+		return false;
+	if(root->right && min(root->right) < root->value)
+		return false;
+	return isBST(root->left) && isBST(root->right);
+}
+
+/*
+A better isBST method - checks for permissible range of values at every node
+*/
+
+bool isBSTHelper(BSTNode *root, int min, int max)
+{
+	if(root==NULL)
+		return true;
+
+	if(root->value < min || root->value > max)
+		return false;
+
+	return isBSTHelper(root->left, INT_MIN, root->value - 1) 
+			&& isBSTHelper(root->right, root->value + 1, INT_MAX);
+}
+
+bool isBST2(BSTNode *root)
+{
+	return isBSTHelper(root, INT_MIN, INT_MAX);
+}
 
 int main()
 {
@@ -240,4 +339,21 @@ int main()
 	level_order_recursive(root);
 	cout << endl;
 	level_order_iterative(root);
+
+	cout << "=================Print k smallest elements in this BST=================" << endl;
+	int k;
+	cin >> k;
+	int *karr = new int(k);
+
+	ksmallest(root, k, karr);
+	printArray(karr, k);
+	printLevel(root, 1); cout << endl;
+	printLevel(root, -1); cout << endl;
+	printLevel(root, 2); cout << endl;
+	printLevel(root, 3); cout << endl;
+
+	BSTNode *root2 = new BSTNode;
+
+	cout << isBST(root) << endl;
+	cout << isBST2(root) << endl;
 }
