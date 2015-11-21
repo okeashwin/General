@@ -314,6 +314,73 @@ bool isBST2(BSTNode *root)
 	return isBSTHelper(root, INT_MIN, INT_MAX);
 }
 
+/*
+Output the second smallest element in a BST
+*/
+void secondSmallestHelper(BSTNode *root, int& rank)
+{
+	if(root==NULL)
+		return;
+	// cout << "Function call : " << root->value << '\t' << rank << endl;
+	secondSmallestHelper(root->left, rank);
+	
+	if(rank < 2)
+	{
+		rank++;
+		if(rank==2)
+			cout << root->value << endl;
+	}
+	// cout << "Function call continued : " << root->value << '\t' << rank << endl;
+	secondSmallestHelper(root->right, rank);
+
+}
+void secondSmallest(BSTNode *root)
+{
+	int rank = 0;
+	secondSmallestHelper(root, rank);
+}
+
+/*
+Level order traversal of a tree level by level
+using two queues
+
+*/
+
+void printLevelByLevel(BSTNode *root)
+{
+	if(root==NULL)
+		return;
+	queue<BSTNode *> *curr;
+	queue<BSTNode *> *nextLevel;
+	// Declare two queues
+	queue<BSTNode *> aux1;
+	queue<BSTNode *> aux2;
+
+	curr = &aux1;
+	nextLevel = &aux2;
+	curr->push(root);
+	BSTNode *dequeued;
+	while(!(curr->empty()))
+	{
+		dequeued = curr->front();
+		curr->pop();
+		cout << dequeued->value << " ";
+
+		if(dequeued->left)
+			nextLevel->push(dequeued->left);
+		if(dequeued->right)
+			nextLevel->push(dequeued->right);
+
+		if(curr->size()==0)
+		{
+			// Level needs to change and curr queue ptr needs to be swapped
+			curr = (curr == &aux1)? &aux2 : &aux1;
+			nextLevel = (nextLevel == &aux1)? &aux2 : &aux1;
+			cout << endl;
+		}
+	}
+}
+
 int main()
 {
 	int arr[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -341,14 +408,14 @@ int main()
 	level_order_iterative(root);
 
 	cout << "=================Print k smallest elements in this BST=================" << endl;
-	int k;
-	cin >> k;
+	int k = 5;
+	// cin >> k;
 	int *karr = new int(k);
 
 	ksmallest(root, k, karr);
 	printArray(karr, k);
+	printLevel(root, 0); cout << endl;
 	printLevel(root, 1); cout << endl;
-	printLevel(root, -1); cout << endl;
 	printLevel(root, 2); cout << endl;
 	printLevel(root, 3); cout << endl;
 
@@ -356,4 +423,9 @@ int main()
 
 	cout << isBST(root) << endl;
 	cout << isBST2(root) << endl;
+
+	cout << "Second smallest : ";secondSmallest(root);
+
+	cout << "===================== Level by level printing ===============" << endl;
+	printLevelByLevel(root);
 }

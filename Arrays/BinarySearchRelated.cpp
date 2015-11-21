@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cstdlib>
 
 using namespace std;
 
@@ -49,8 +50,8 @@ int binarySearchRecursiveHelperFirstInstance(vector<int> nums, int start, int en
 	// A change here to see if 'middle' is the first instance of 'target'
 	if((middle == 0 || nums[middle-1] < target) && target == nums[middle])
 		return middle;
-	else if(target < nums[middle])
-		return binarySearchRecursiveHelperFirstInstance(nums, 0, middle - 1, target);
+	else if(target <= nums[middle])
+		return binarySearchRecursiveHelperFirstInstance(nums, start, middle - 1, target);
 	else
 		return binarySearchRecursiveHelperFirstInstance(nums, middle + 1, end, target);
 }
@@ -69,7 +70,7 @@ int binarySearchRecursiveHelperLastInstance(vector<int> nums, int start, int end
 	if((middle == nums.size() - 1 || nums[middle + 1] > target ) && target == nums[middle])
 		return middle;
 	else if(target < nums[middle])
-		return binarySearchRecursiveHelperLastInstance(nums, 0, middle - 1, target);
+		return binarySearchRecursiveHelperLastInstance(nums, start, middle - 1, target);
 	else
 		return binarySearchRecursiveHelperLastInstance(nums, middle + 1, end, target);
 }
@@ -107,17 +108,48 @@ int fixedPoint(vector<int> nums)
 }
 
 
+int sqrtHelper(int x, int start, int end)
+{
+	if(start > end)
+		return end;
+
+	int middle = start + (end - start )/2;
+	if(middle*middle == x)
+		return middle;
+	else if(middle*middle < x)
+		return sqrtHelper(x, middle + 1, end);
+	else
+		return sqrtHelper(x, start, middle - 1);
+}
+
+int squareRoot(int x)
+{
+	if(x<0)
+		return -1;
+	if(x==0) 
+		return 0;
+	return sqrtHelper(x,1,x);
+}
 int main()
 {
-	int arr[] = {1, 1, 2, 3, 4, 4, 4, 4, 6, 6, 7, 8, 9, 10};
-	vector<int> nums(arr, arr + sizeof(arr)/ sizeof(int));
-	cout << "Binary Search iterative for 4 : Index " << binary_search_iterative(nums,4) << endl;
-	cout << "Binary Search recursive for 4 : Index " << binary_search_recursive(nums,4) << endl;
-	cout << "First Index for 4 : Index " << binary_search_first_instance_of(nums,4) << endl;
-	cout << "Last Index for 4 : Index " << binary_search_last_instance_of(nums,4) << endl;
+	// int arr[] = {1, 1, 2, 3, 4, 4, 4, 4, 6, 6, 7, 8, 9, 10};
+	// vector<int> nums(arr, arr + sizeof(arr)/ sizeof(int));
+	// cout << "Binary Search iterative for 4 : Index " << binary_search_iterative(nums,4) << endl;
+	// cout << "Binary Search recursive for 4 : Index " << binary_search_recursive(nums,4) << endl;
+	// cout << "First Index for 4 : Index " << binary_search_first_instance_of(nums,4) << endl;
+	// cout << "Last Index for 4 : Index " << binary_search_last_instance_of(nums,4) << endl;
 
-	int arr2[10] = {-10, -1, 0, 3, 10, 11, 30, 50, 100};
-	vector<int> nums2(arr2, arr2 + sizeof(arr2)/sizeof(int));
-	cout << fixedPoint(nums2) << endl;
+	// int arr2[10] = {-10, -1, 0, 3, 10, 11, 30, 50, 100};
+	// vector<int> nums2(arr2, arr2 + sizeof(arr2)/sizeof(int));
+	// cout << fixedPoint(nums2) << endl;
+	int temp = 0;
+	srand(time(NULL));
+	for(int i=0;i<20;i++)
+	{
+		temp = rand()%100;
+		cout << temp << '\t' << squareRoot(temp) << endl;
+	}
+
+	// cout << squareRoot(484) << endl;
 	return 0;
 }
