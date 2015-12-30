@@ -2,6 +2,7 @@
 #include <stack>
 #include <queue>
 #include <climits>
+#include <cmath>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ typedef struct BSTNode {
 BSTNode *sortedArrayToBSTHelper(int arr[], int start, int end);
 BSTNode *sortedArrayToBST(int arr[], int size);
 void inorder(BSTNode *root);
+int inorderSuccessor(BSTNode *root, int nodeValue);
 
 BSTNode *sortedArrayToBST(int arr[], int size)
 {
@@ -334,10 +336,116 @@ void secondSmallestHelper(BSTNode *root, int& rank)
 	secondSmallestHelper(root->right, rank);
 
 }
+
+void reverseInorder(BSTNode *root)
+{
+	if(root==NULL)
+		return;
+	reverseInorder(root->right);
+	cout << root->value << " ";
+	reverseInorder(root->left);
+}
+
 void secondSmallest(BSTNode *root)
 {
 	int rank = 0;
 	secondSmallestHelper(root, rank);
+}
+
+void zigZagTraversal(BSTNode *root)
+{
+	if(root==NULL)
+		return;
+	// Declare two stacks
+	queue<BSTNode *> *curr;
+	queue<BSTNode *> *nextLevel;
+
+	queue<BSTNode *> aux1;
+	queue<BSTNode *> aux2;
+
+	curr= &aux1;
+	nextLevel = &aux2;
+
+	curr->push(root);
+	BSTNode *node;
+	int level = 0;
+	stack<BSTNode *> aux;
+	while(!(curr->empty()))
+	{
+		node = curr->front();
+		if(level%2)
+			aux.push(node);
+		else
+			cout << node->value << " ";
+
+		curr->pop();
+		if(node->left)
+			nextLevel->push(node->left);
+		if(node->right)
+			nextLevel->push(node->right);
+
+		if(curr->size()==0)
+		{
+			curr = (curr == &aux1)? &aux2:&aux1;
+			nextLevel = (nextLevel == &aux1)? &aux2:&aux1;
+			level++;
+			while(!(aux.empty()))
+			{
+				cout << (aux.top())->value << " ";
+				aux.pop();
+			}
+			cout << endl;
+		}
+	}
+}
+
+void zigZagStacks(BSTNode *root)
+{
+	if(root==NULL)
+		return;
+
+	// Declare two stacks
+	stack<BSTNode *> aux1;
+	stack<BSTNode *> aux2;
+
+	stack<BSTNode *> *curr;
+	stack<BSTNode *> *nextLevel;
+
+	curr = &aux1;
+	nextLevel = &aux2;
+
+	curr->push(root);
+	int level = 1;
+	BSTNode *node;
+	while(!(curr->empty()))
+	{
+		node = curr->top();
+		curr->pop();
+		cout << node->value << " ";
+		if(level%2)
+		{
+			if(node->left)
+				nextLevel->push(node->left);
+			if(node->right)
+				nextLevel->push(node->right);
+		}
+
+		else
+		{
+			if(node->right)
+				nextLevel->push(node->right);
+			if(node->left)
+				nextLevel->push(node->left);
+		}
+
+		if(curr->size()==0)
+		{
+			cout << endl;
+			level++;
+			curr = (curr == &aux1)? &aux2:&aux1;
+			nextLevel = (nextLevel == &aux1)? &aux2:&aux1;
+		}
+	}
 }
 
 /*
@@ -381,7 +489,96 @@ void printLevelByLevel(BSTNode *root)
 	}
 }
 
-int main()
+void sumAGivenNumber(BSTNode *root, int target, int sum, vector<int>& result)
+{
+	if(root==NULL)
+		return;
+
+	if(sum==0)
+	{
+		result.push_back(root->value);
+		result.push_back(target - root->value);
+		// return true;
+	}
+	else
+	{
+		sumAGivenNumber(root->left, target, sum - root->value, result);
+		sumAGivenNumber(root->right, target, sum - root->value, result);
+	}
+
+}
+
+void doubleEveryNode(BSTNode *root)
+{
+	if(root==NULL)
+		return;
+	doubleEveryNode(root->left);
+	doubleEveryNode(root->right);
+	root->value = root->value*2;
+}
+
+void pairSum(BSTNode *root, int sum)
+{
+	vector<int> result;
+	sumAGivenNumber(root, sum, sum, result);
+
+	for(int i=0;i<result.size();i+=2)
+		cout << "( " << result[i] << " , " << result[i+1] << " )" << endl;
+
+}
+
+BSTNode *findNode(BSTNode *root, int nodeValue)
+{
+	if(root==NULL)
+		return NULL;
+	if(nodeValue == root->value)
+		return root;
+	// Search in left subtree
+	else if(nodeValue < root->value)
+		return findNode(root->left, nodeValue);
+	else
+		return findNode(root->right, nodeValue);
+}
+int inorderSuccessor(BSTNode *root, int nodeValue)
+{
+	BSTNode *node = findNode(root, nodeValue);
+	if(node==NULL)
+	{
+		cout << "Could not find the node" << endl;
+		return -1;
+	}
+
+	if(node->right)
+	{
+		// Return the leftmost of the right subtree
+		BSTNode *temp = node->right;
+		while(temp->left)
+			temp = temp->left;
+		return temp->value;
+	}
+	else
+	{
+		// Start from root and return the parent of
+		BSTNode *temp = root;
+		BSTNode *succ = root;
+		while(1)
+		{
+			if(temp->value==nodeValue)
+				break;
+			else if(nodeValue < temp->value)
+			{
+				succ = temp;
+				temp = temp->left;
+			}
+			else
+				temp = temp->right;
+		}
+
+		return succ->value; 
+	}
+}
+
+void test()
 {
 	int arr[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	BSTNode *root;
@@ -428,4 +625,18 @@ int main()
 
 	cout << "===================== Level by level printing ===============" << endl;
 	printLevelByLevel(root);
+	cout << "=====================Zig zag traversal =====================" << endl;
+	zigZagTraversal(root);
+	cout << "====================Zig zag stacks==========================" << endl;
+	zigZagStacks(root);
+
+	pairSum(root, 7);
+	cout << endl;
+	cout << (40 << 2) << endl;
+	cout << INT_MAX << '\t' << pow(2, sizeof(int)*8 - 1) - 1 << endl;
+
+	cout << "============== Reverse Inorder =========================" << endl;
+	reverseInorder(root); cout << endl;
+
+	inorder_iterative(root);doubleEveryNode(root);inorder_iterative(root);
 }
