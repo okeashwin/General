@@ -1,0 +1,70 @@
+{
+	'filename' : 'DV-S2_ACTTGA_L008_R1_001.fastq',
+	'flowcell' : 'DV',
+	'project' : 'S2',
+	'subproject' : 'ACTTGA',
+	'method' : 'L008',
+	'id' : 'R1',
+	'code' : 1,
+	'A_freq' : 29225,
+	'T_freq' : 37377,
+	'G_freq' : 33779,
+	'C_freq' : 26921,
+}
+
+{
+	'filename' : 'DV-S2_ACTTGA_L008_R1_002.fastq',
+	'flowcell' : 'DV',
+	'project' : 'S2',
+	'subproject' : 'ACTTGA',
+	'method' : 'L008',
+	'id' : 'R1',
+	'code' : 2,
+	'A_freq' : 29366,
+	'T_freq' : 37697,
+	'G_freq' : 34230,
+	'C_freq' : 26206,
+}
+
+{
+	'filename' : 'DV-S2_ACTTGA_L008_R1_003.fastq',
+	'flowcell' : 'DV',
+	'project' : 'S2',
+	'subproject' : 'ACTTGA',
+	'method' : 'L008',
+	'id' : 'R1',
+	'code' : 3,
+	'A_freq' : 29068,
+	'T_freq' : 37459,
+	'G_freq' : 33931,
+	'C_freq' : 27036,
+}
+
+{
+	'filename' : 'DV-S3_ACGTGA_L008_R2_001.fastq',
+	'flowcell' : 'DV',
+	'project' : 'S3',
+	'subproject' : 'ACGTGA',
+	'method' : 'L008',
+	'id' : 'R2',
+	'code' : 1,
+	'A_freq' : 29074,
+	'T_freq' : 38046,
+	'G_freq' : 33795,
+	'C_freq' : 26577,
+}
+
+{
+	'filename' : 'DV-S4_ACTTCA_L008_R1_002.fastq',
+	'flowcell' : 'DV',
+	'project' : 'S4',
+	'subproject' : 'ACTTCA',
+	'method' : 'L008',
+	'id' : 'R1',
+	'code' : 2,
+	'A_freq' : 28984,
+	'T_freq' : 37493,
+	'G_freq' : 33831,
+	'C_freq' : 27192,
+}
+
