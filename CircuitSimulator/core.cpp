@@ -44,7 +44,29 @@ int main(int argc, char *argv[]) {
 		if(logging) log_file << "Read line "<<line << endl;
 		cout << line << endl;
 		vector<string> tokens = tokenize(line, ' ');
-		printVec(tokens);
+		print_vec(tokens);
+		if(tokens[0].compare("INPUT")==0 || tokens[0].compare("OUTPUT")==0) {
+			fill_sets(tokens);
+			if(logging) print_io_ports(log_file);
+		}
+		else {
+			// A circuit unit
+			unit current_unit = instantiate_unit();
+			current_unit._operator.append(tokens[0]);
+			if(current_unit._operator.compare("INV")==0 || current_unit._operator.compare("BUF")==0) {
+				// We get only one input operand here
+				current_unit.ip_port[0] = atoi(tokens[1].c_str());
+				current_unit.op_port = atoi(tokens[2].c_str());
+			}
+			else {
+				current_unit.ip_port[0] = atoi(tokens[1].c_str());
+				current_unit.ip_port[1] = atoi(tokens[2].c_str());
+				current_unit.op_port = atoi(tokens[3].c_str());
+			}
+
+			if(logging) log_file << "Following circuit unit recorded :" <<endl;
+			if(logging) print_unit_data(current_unit, log_file);
+			}
 
 	}
 }
